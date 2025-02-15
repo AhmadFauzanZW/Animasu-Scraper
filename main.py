@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import streamlit as st
 
 url = "https://v9.animasu.cc/"
 HEADERS = {
@@ -52,11 +53,23 @@ for i in boxes:
     titles2.append(title)
 # print(titles2)
 
+##################################################################
+
 data = {header1: titles1, header2: titles2}
 
 df = pd.DataFrame(data)
 print(df)
 
 df.to_csv("animasu-update-anime.csv", index = False)
+
+df = pd.read_csv("animasu-update-anime.csv")
+
+st.title("Update Anime Hari ini di animasu.cc")
+st.divider()
+st.write(df)
+
+if st.button("Refresh", type="primary"):
+    st.rerun()
+
 
 
