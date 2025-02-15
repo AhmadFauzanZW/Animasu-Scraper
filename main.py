@@ -15,7 +15,8 @@ r = requests.get(url, headers=HEADERS)
 soup = BeautifulSoup(r.text, "lxml")
 # print(soup)
 
-container1 = soup.find_all("div", class_ = "bixbox")[1]
+container1 = soup.find_all("div", class_ = "bixbox")
+container1 = container1[1]
 # print(container1)
 
 section = container1.find("div", class_ = "releases")
@@ -45,7 +46,8 @@ for i in episodes:
 print("\n")
 ##################################################################
 
-container2 = soup.find_all("div", class_ = "bixbox")[2]
+container2 = soup.find_all("div", class_ = "bixbox")
+container2 = container2[2]
 # print(container)
 
 section = container2.find("div", class_ = "releases")
