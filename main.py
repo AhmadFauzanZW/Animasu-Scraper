@@ -76,11 +76,11 @@ for i in episodes:
 data = {header1: titles1, "Eps": episodes_1, header2: titles2, "Eps Total": episodes_2}
 
 df = pd.DataFrame(data)
-print(df)
 
 df.to_csv("animasu-update-anime.csv", index = False)
 
 df = pd.read_csv("animasu-update-anime.csv")
+# print(df)
 
 st.header("Update Anime Hari ini di animasu.cc")
 st.subheader("By Ahmad Fauzan")
