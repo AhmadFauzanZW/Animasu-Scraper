@@ -5,6 +5,7 @@ import streamlit as st
 import time
 import logging
 from typing import List, Tuple, Optional
+import random
 
 # Configure logging
 logging.basicConfig(
@@ -15,18 +16,36 @@ logger = logging.getLogger(__name__)
 
 # Constants
 URL = "https://v9.animasu.cc/"
+
+# Enhanced headers to mimic a real browser
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'none',
+    'Sec-Fetch-User': '?1',
+    'Cache-Control': 'max-age=0'
 }
 
 
 def fetch_webpage(url: str, headers: dict) -> Optional[BeautifulSoup]:
     """
-    Fetch webpage content with error handling.
+    Fetch webpage content with error handling and delay.
     """
     try:
-        response = requests.get(url, headers=headers)
+        # Add a small random delay
+        time.sleep(random.uniform(1, 3))
+
+        session = requests.Session()
+        # First make a GET request to the homepage
+        response = session.get(url, headers=headers, timeout=10)
         response.raise_for_status()
+
         return BeautifulSoup(response.text, "lxml")
     except requests.RequestException as e:
         st.error(f"Error fetching data: {str(e)}")
@@ -124,14 +143,16 @@ def main():
             # Create columns for buttons
             left, right = st.columns(2)
 
-            if left.button("Refresh", type="secondary", use_container_width=True):
+            # Green refresh button
+            if left.button("Refresh",
+                           type="primary",  # Changed to primary for green color
+                           use_container_width=True):
                 st.rerun()
 
-            right.link_button(
-                "Link Animasu",
-                url=URL,
-                use_container_width=False,
-                type="tertiary"
+            # Blue link using markdown
+            right.markdown(
+                f'<a href="{URL}" style="color: #0066cc; text-decoration: underline;">Link Animasu</a>',
+                unsafe_allow_html=True
             )
 
             break  # Success, exit retry loop
