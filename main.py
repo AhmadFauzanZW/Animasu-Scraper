@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
 
 url = "https://v9.animasu.cc/"
 HEADERS = {
