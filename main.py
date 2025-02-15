@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 url = "https://v9.animasu.cc/"
 HEADERS = {
@@ -16,7 +17,7 @@ soup = BeautifulSoup(r.text, "lxml")
 # print(soup)
 
 container1 = soup.find_all("div", class_ = "bixbox")[1]
-# print(container)
+# print(container1)
 
 section = container1.find("div", class_ = "releases")
 header1 = section.find("span")
@@ -32,6 +33,15 @@ for i in boxes:
     titles1.append(title)
 # print(titles1)
 
+episodes = container1.find_all("span", class_ = "epx")
+# print(episodes)
+
+episodes_1 = []
+for i in episodes:
+    episode = i.text
+    episodes_1.append(episode)
+# print(episodes_1)
+
 ##################################################################
 print("\n")
 ##################################################################
@@ -42,7 +52,7 @@ container2 = soup.find_all("div", class_ = "bixbox")[2]
 section = container2.find("div", class_ = "releases")
 header2 = section.find("span")
 # print(header2.text)
-header2 = header2.text
+header2 = header2.text + " (Completed)"
 
 boxes = container2.find_all("div", class_ = "tt")
 # print(boxes)
@@ -53,9 +63,18 @@ for i in boxes:
     titles2.append(title)
 # print(titles2)
 
+episodes = container2.find_all("span", class_ = "epx")
+# print(episodes)
+
+episodes_2 = []
+for i in episodes:
+    episode = i.text
+    episodes_2.append(episode)
+# print(episodes_2)
+
 ##################################################################
 
-data = {header1: titles1, header2: titles2}
+data = {header1: titles1, "Eps": episodes_1, header2: titles2, "Eps Total": episodes_2}
 
 df = pd.DataFrame(data)
 print(df)
@@ -64,12 +83,16 @@ df.to_csv("animasu-update-anime.csv", index = False)
 
 df = pd.read_csv("animasu-update-anime.csv")
 
-st.title("Update Anime Hari ini di animasu.cc")
+st.header("Update Anime Hari ini di animasu.cc")
+st.subheader("By Ahmad Fauzan")
 st.divider()
 st.write(df)
 
-if st.button("Refresh", type="primary"):
+left, right = st.columns(2)
+
+if left.button("Refresh", type="secondary", use_container_width=True):
     st.rerun()
+right.link_button("Link Animasu", url="https://v9.animasu.cc/", use_container_width=False, type="tertiary")
 
 
 
